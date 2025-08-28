@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
     public float movementSpeed = 10f;
     private bool gravityInverted = false;
     public float gravityMultiplier = 2f;
+    public CollisionHandler collisionScript;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -26,5 +27,12 @@ public class PlayerMovement : MonoBehaviour
             Physics.gravity = gravityMultiplier * (gravityInverted ? Vector3.up * 9.81f : Vector3.down * 9.81f);
 
         }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("KillBlock"))
+            collisionScript.HandleReset(0);
+        else if (collision.gameObject.CompareTag("EndBlock"))
+            collisionScript.HandleReset(1);
     }
 }

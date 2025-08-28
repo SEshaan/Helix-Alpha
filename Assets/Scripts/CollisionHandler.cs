@@ -2,14 +2,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class collision : MonoBehaviour
+public class CollisionHandler : MonoBehaviour
 {
-
+    public GameObject player;
     public ParticleSystem  ps;
     public GameObject WinScreen;
     public GameObject DeathScreen;
     public TMP_Text scoreMessage;
-
     public int scoreMultiplier = 1;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,28 +23,22 @@ public class collision : MonoBehaviour
         scoreMessage.text = "Score: " + ComputeScore();
     }
 
-    private void OnCollisionEnter(UnityEngine.Collision collision)
+    public void HandleReset(int check)
     {
-        if (collision.gameObject.CompareTag("KillBlock"))
-        {
-            DeathScreen.SetActive(true);
-            Destroy(this.gameObject);
-            ps.Play();
-
-        }
-        else if (collision.gameObject.CompareTag("EndBlock"))
-        {
+        if (check == 1)
             WinScreen.SetActive(true);
-            Destroy(this.gameObject);
-            ps.Play();
-        }
+        else
+            DeathScreen.SetActive(true);
+
+        Destroy(player);
+        ps.Play();
+        Invoke("RestartGame", 3f);
     }
 
     private int ComputeScore()
     {
         return Mathf.RoundToInt(scoreMultiplier * transform.position.z);
     }
-
 
     public void RestartGame()
     {
